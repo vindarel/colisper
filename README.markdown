@@ -48,8 +48,58 @@ Install comby and call
 
 Note that we might actually want to keep the `(format *error-output*…)` as is.
 
-Accordingly, we don't quite leverage Comby's power here, as we might
-as well write a `sed` one liner. It will shine when we have to span s-expressions.
+It seems we don't leverage Comby's power here. But this rule still
+works with multilines:
+
+```lisp
+(defun product-create-route/post ("/create" :method :post)
+  (title price)
+  (format
+   t
+   "title is ~a~&"
+   title)
+  (format
+   t
+   "price is ~a~&"
+   price)
+  (handler-case
+      (make-product :title title)
+    (error (c)
+      (format *error-output*
+              "ooops: ~a"
+              c)))
+  (render-template* +product-created.html+ nil))
+```
+
+```diff
+------ foo.lisp
+++++++ foo.lisp
+@|-6,18 +6,13 ============================================================
+ |
+ |(defun product-create-route/post ("/create" :method :post)
+ |  (title price)
+-|  (format
+-|   t
+-|   "title is ~a~&"
++|  (log:debug "title is ~a~&"
+-|   title)
+-|  (format
+-|   t
+-|   "price is ~a~&"
++|   title)
++|  (log:debug "price is ~a~&"
+ |   price)
+ |  (handler-case
+ |      (make-product :title title)
+ |    (error (c)
+-|      (format *error-output*
+-|              "ooops: ~a"
++|      (log:debug "ooops: ~a"
+ |              c)))
+ |  (render-template* +product-created.html+ nil))
+```
+
+And Comby will shine more when we have to span s-expressions.
 
 Anyways, we can do this from our favorite editor.
 
