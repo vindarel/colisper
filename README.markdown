@@ -103,12 +103,61 @@ And Comby will shine more when we have to span s-expressions.
 
 Anyways, we can do this from our favorite editor.
 
+## Rewrite `if … progn` to `when`
+
+Rewrite:
+
+```lisp
+(if (and (getf options :version)
+             (foo)
+             ;; comment (with parens even
+             #| nasty comment:
+             (if (test) (progn even)))
+             |#
+         (bar))
+    (progn
+      (format t "Project version ~a~&" +version+)
+      (print-system-info)
+      (uiop:quit)))
+```
+
+to:
+
+```lisp
+(when (and (getf options :version)
+           (foo)
+           ;; comment (with parens even
+           #| nasty comment:
+           (if (test) (progn even)))
+           |#
+           (bar))
+  (format t "Project version ~a~&" +version+)
+  (print-system-info)
+  (uiop:quit)
+  )
+```
+
+(todo: indent correctly the last parenthesis)
 
 ## Emacs integration
 
 Place the cursor inside the function and call `M-x combycl--format-to-debug`.
 
 It replaces the function body with the new result.
+
+# Difficulties
+
+Rewriting doesn't respect indentation, so re-writing multiple lines is problematic.
+
+https://comby.dev/docs/faq
+
+> What is Comby not good at?
+
+> When talking about matching or changing code, Comby is not well-suited to stylistic changes and formatting like "insert a line break after 80 characters". Pair Comby with a language-specific formatter to preserve formatting (like gofmt for the Go language) after performing a change.
+
+So we'll use our editor. Emacs has `indent-region`.
+
+Also, pair with https://github.com/hyotang666/trivial-formatter ?
 
 
 ## Final words
