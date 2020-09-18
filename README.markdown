@@ -11,6 +11,14 @@ cleaning the replacements.
 
 Here are my practical use cases.
 
+You can try by cloning the repo and using this comby command:
+
+    comby -config ~/path/to/combycl/src/patterns/remove-print.toml -f tests/playground.lisp
+
+a one-liner looks like:
+
+    comby '(print :[rest])' ':[rest]' tests/playground.lisp
+
 ### Transformat `format t …` to `log:debug`
 
 We are writing Lisp when suddenly, we want to rewrite some `format` to `log:debug`.
