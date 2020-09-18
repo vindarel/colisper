@@ -1,14 +1,17 @@
 Structural refactoring recipes for Common Lisp with [Comby](https://comby.dev/).
 
-Proof Of Work. Not much here.
-
-## Demo
+Proof of Work. Not ready for use other than by myself.
 
 Comby makes it easy to match code structures.
 
-Here's my practical use case.
+We call it from our favorite editor (Emacs), which we use to finish
+cleaning the replacements.
 
-### `format` to `log:debug`
+## Demo
+
+Here are my practical use cases.
+
+### Transformat `format t …` to `log:debug`
 
 We are writing Lisp when suddenly, we want to rewrite some `format` to `log:debug`.
 
@@ -101,7 +104,27 @@ works with multilines:
 
 And Comby will shine more when we have to span s-expressions.
 
-Anyways, we can do this from our favorite editor.
+## Remove any `print`
+
+We are using `print` for debugging purposes when suddenly, our code is
+ready for production use.
+
+    M-x combycl--remove-print
+
+```lisp
+(push (hunchentoot:create-folder-dispatcher-and-handler
+         "/static/" (print (merge-pathnames *default-static-directory*
+                                            (asdf:system-source-directory :abstock))))
+        hunchentoot:*dispatch-table*)
+```
+
+~~~lisp
+(push (hunchentoot:create-folder-dispatcher-and-handler
+         "/static/" (merge-pathnames *default-static-directory*
+                                     (asdf:system-source-directory :abstock)))
+        hunchentoot:*dispatch-table*)
+~~~
+
 
 ## Rewrite `if … progn` to `when`
 
