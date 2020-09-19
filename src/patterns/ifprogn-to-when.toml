@@ -1,13 +1,10 @@
-# TODO: it's OK to run this rule when we KNOW our code is bad,
-# however would be nice to make it NOT run when an else clause is present.
-
 [ifprogn-to-when]
 
-match="if (:[test]) (progn :[rest])"
+match="(if (:[test]) (progn :[rest]))"
 
 # does not respect indentation in the rewrite :/ => use Emacs
 
 rewrite='''
-when (:[test])
-:[rest]
+(when (:[test])
+:[rest])
 '''
