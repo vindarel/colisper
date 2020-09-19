@@ -1,11 +1,17 @@
 Structural refactoring recipes for Common Lisp with [Comby](https://comby.dev/).
 
-Proof of Work. Not ready for use other than by myself.
+Proof of Work. Not ready for use by other than myself.
 
-Comby makes it easy to match code structures.
+Comby makes it easy to match code structures. It can output a diff or
+change the code in-place.
 
-We call it from our favorite editor (Emacs), which we use to finish
-cleaning the replacements.
+We define rules for lisp.
+
+We can call them from our favorite editor (here, Emacs) during
+development (the editor which also helps format the replacements
+correctly, like to fix indentation).
+
+And we can run them on some file(s) as a pre-commit hook or in a CI.
 
 ## Demo
 
@@ -175,6 +181,15 @@ to:
 Place the cursor inside the function and call `M-x combycl--format-to-debug`.
 
 It replaces the function body with the new result.
+
+## Run all rules with a script
+
+    ./combycl.sh [file.lisp]
+
+It returns 0 (success) if no rules were applied (code is good).
+
+TODO: write a real script.
+
 
 # Difficulties
 
