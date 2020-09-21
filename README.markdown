@@ -1,6 +1,6 @@
 Structural refactoring recipes for Common Lisp with [Comby](https://comby.dev/).
 
-Proof of Work. Not ready for use by other than myself.
+Proof of Work. Somewhat usable.
 
 Comby makes it easy to match code structures. It can output a diff or
 change the code in-place.
@@ -123,7 +123,7 @@ And Comby will shine more when we have to span s-expressions.
 We are using `print` for debugging purposes when suddenly, our code is
 ready for production use.
 
-    M-x combycl--remove-print
+    M-x colisper--remove-print
 
 ```lisp
 (push (hunchentoot:create-folder-dispatcher-and-handler
@@ -184,13 +184,13 @@ It replaces the function body with the new result.
 
 See:
 
-- `M-x colisper-defun-hydra/body`: act on the current defun.
-- `M-x colisper-file-hydra/body`: act on the current file.
-  - `M-x colisper-check-file`: runs all rules and displays the diff in a compilation buffer.
+- `colisper-[XXX]-hydra/body`: act on the current defun/file/project, where actions can be:
+  -`…-check-file`: run all rules and display the diff in a compilation buffer,
+  - `…-apply`: TODO
 
 ## Run all rules with a script
 
-    ./combycl.sh [file.lisp]
+    ./colisper.sh [file.lisp]
 
 It returns 0 (success) if no rules were applied (code is good).
 

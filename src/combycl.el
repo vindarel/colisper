@@ -5,6 +5,7 @@
 ;;; - [X] POC
 ;;; - [-] a hydra (transient?) to choose defun/file/project and the replacement rule.
 ;;; - [ ] don't hardcode the comby rules
+;;; - [ ] the compilation buffer output is not usable with flymake-goto-next-error
 ;;; - [ ] all the rest.
 ;;;
 ;;; Implementation notes:
@@ -72,6 +73,15 @@
     (message cmd)
     (compile cmd)))
 
+(defun colisper-check-project ()
+  "Check the current project."
+  (interactive)
+  (compile (concatenate 'string
+                        "cd "
+                        (projectile-project-root)
+                        " && "
+                        ;; comby finds the files with the required extension itself. Thanks!
+                        "comby -config ~/projets/combycl/src/patterns/* -matcher .lisp -f .lisp")))
 
 (defhydra colisper-defun-hydra (:color blue :columns 3)
   "
@@ -87,3 +97,9 @@
   "
   ("c" colisper-check-file "Check file")
   ("a" colisper--replace-all "replace All in file"))
+
+(defhydra colisper-project-hydra (:color red :column 3)
+  "
+  Check or refactor this project.
+  "
+  ("c" colisper-check-project "Check project"))
