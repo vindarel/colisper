@@ -38,7 +38,7 @@
         (end (save-excursion
                (end-of-defun)
                (point)))
-        (cmd "comby -config ~/projets/combycl/src/patterns/ifprogn-to-when.toml -matcher .lisp -stdin -stdout"))
+        (cmd "comby -config ~/projets/colisper/src/patterns/ifprogn-to-when.toml -matcher .lisp -stdin -stdout"))
     (shell-command-on-region beg end cmd t t)
     (indent-region beg end)
     (goto-char point)
@@ -53,7 +53,7 @@
          (end (save-excursion
                 (end-of-defun)
                 (point)))
-         (cmd "comby -config ~/projets/combycl/src/patterns/remove-print.toml -matcher .lisp -stdin -stdout")
+         (cmd "comby -config ~/projets/colisper/src/patterns/remove-print.toml -matcher .lisp -stdin -stdout")
          (retcode (shell-command-on-region beg end cmd t t)))
     (cond
      ((= 0 retcode)
@@ -68,7 +68,7 @@
   (interactive)
   (let* ((filename (buffer-file-name))
          (cmd (concatenate 'string
-                           "comby -config ~/projets/combycl/src/patterns/* -matcher .lisp -f "
+                           "comby -config ~/projets/colisper/src/patterns/* -matcher .lisp -f "
                            filename)))
     (message cmd)
     (compile cmd)))
@@ -81,7 +81,7 @@
                         (projectile-project-root)
                         " && "
                         ;; comby finds the files with the required extension itself. Thanks!
-                        "comby -config ~/projets/combycl/src/patterns/* -matcher .lisp -f .lisp")))
+                        "comby -config ~/projets/colisper/src/patterns/* -matcher .lisp -f .lisp")))
 
 (defhydra colisper-defun-hydra (:color blue :columns 3)
   "
