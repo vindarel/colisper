@@ -178,9 +178,15 @@ to:
 
 ## Emacs integration
 
-Place the cursor inside the function and call `M-x combycl--format-to-debug`.
+Place the cursor inside the function and call `M-x coliper--format-to-debug`.
 
 It replaces the function body with the new result.
+
+See:
+
+- `M-x colisper-defun-hydra/body`: act on the current defun.
+- `M-x colisper-file-hydra/body`: act on the current file.
+  - `M-x colisper-check-file`: runs all rules and displays the diff in a compilation buffer.
 
 ## Run all rules with a script
 

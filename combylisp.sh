@@ -14,11 +14,11 @@ PATTERNS_DIR=src/patterns/
 
 returncode=0
 
-# XXX: separate rules into categories, take the one for code checking.
+# XXX: -config / -templates accept a directory as argument or more than one comma-separated paths to toml files.
+# But then how do we check that ONE rule failed?
+# idea: separate rules into categories, take the one for code checking.
 for file in $(ls $PATTERNS_DIR); do
     echo " * running " $file
-    # XXX: comby accepts -config with more than one comma-separated paths.
-    # But then how do we check that ONE rule failed?
     comby -config $PATTERNS_DIR/$file -f $1 > .result.txt && \
         cat .result.txt >> .allresults.txt && \
         cat .result.txt
