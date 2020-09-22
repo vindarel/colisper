@@ -1,3 +1,20 @@
+;;; colisper.el --- Syntactic checks and refactoring for Lisp code with Comby -*- lexical-binding: t -*-
+
+;; Copyright (C) 2020  wtf public licence
+
+;; Author: vindarel <vindarel@mailz.org>
+;; URL:
+;; Version: 0.1
+;; Keywords: refactoring, static check, comby
+;; Package-Requires: ((hydra "0") )
+
+;;; Commentary:
+
+;; Syntactic checks and refactoring. regex-replace on steroids, with Comby.  It can act on the current defun, the current file or a project.
+;; You must install `comby' yourself: https://comby.dev/
+
+;;; Code:
+
 ;;;
 ;;; Goals: call Comby on a defun, on the file or on the project.
 ;;;
@@ -13,6 +30,15 @@
 ;;; - I'm rusted. See https://www.gnu.org/software/emacs/manual/html_node/elisp/Synchronous-Processes.html Use shell-command-to-string?
 
 (require 'hydra)
+
+(defgroup colisper nil
+  "colisper uses Comby to check and refactor lisp code against existing rules. It can act on the current defun, the current file or a project."
+  :group 'tools)
+
+(defcustom colisper-comby-path "comby"
+  "Path to the comby combinary."
+  :type 'string
+  :group 'colisper)
 
 (defun colisper--format-to-debug ()
   (interactive)
@@ -83,6 +109,7 @@
                         ;; comby finds the files with the required extension itself. Thanks!
                         "comby -config ~/projets/colisper/src/patterns/* -matcher .lisp -f .lisp")))
 
+;;;###autoload
 (defhydra colisper-defun-hydra (:color blue :columns 3)
   "
   Refactor this defun.
@@ -91,6 +118,7 @@
   ("d" colisper--format-to-debug "format to Debug")
   ("i" colisper--ifprogn-to-when "If…progn to when"))
 
+;;;###autoload
 (defhydra colisper-file-hydra (:color red :column 3)
   "
   Check or refactor this file.
@@ -98,8 +126,12 @@
   ("c" colisper-check-file "Check file")
   ("a" colisper--replace-all "replace All in file"))
 
+;;;###autoload
 (defhydra colisper-project-hydra (:color red :column 3)
   "
   Check or refactor this project.
   "
   ("c" colisper-check-project "Check project"))
+
+(provide 'colisper)
+;;;colisper.el ends here
