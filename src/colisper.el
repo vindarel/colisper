@@ -20,8 +20,8 @@
 ;;;
 ;;; TODOs:
 ;;; - [X] POC
-;;; - [-] a hydra (transient?) to choose defun/file/project and the replacement rule.
-;;; - [-] don't hardcode the patterns' path
+;;; - [X] a hydra to choose defun/file/project and the replacement rule.
+;;; - [X] don't hardcode the patterns' path
 ;;; - [ ] the compilation buffer output is not usable with goto-next-error
 ;;; - [ ] all the rest.
 ;;;
@@ -40,6 +40,11 @@
   :type 'string
   :group 'colisper)
 
+(defcustom colisper-patterns-path ""
+  "Path to the comby rules, for example a directory of .toml files, each containing one or many rules."
+  :type 'string
+  :group 'colisper)
+
 (defun colisper--create-comby-command (cmd/string &rest args)
   "Prepend the comby path from `colisper-comby-path' to this command (a string), and also concatenate optional parameters (strings)."
   (mapconcat 'identity
@@ -47,6 +52,18 @@
                    cmd/string
                    (mapconcat 'identity args " "))
              " "))
+
+(defun colisper--create-rule-path (rule)
+  "Concatenate the path to the rules with this rule name (a .toml file, as string), and warn of possible misconfiguration."
+  (cond
+   ((string-empty-p colisper-patterns-path)
+    (warn "The path to the Comby rules appears null. You should set the variable `colisper-patterns-path'.")
+    rule)
+   (t
+    (concat colisper-patterns-path
+            (unless (string-suffix-p "/" colisper-patterns-path)
+              "/")
+            rule))))
 
 (defun colisper--test ()
   (print "Testing colisper--create-comby-command...")
@@ -79,7 +96,10 @@
         (end (save-excursion
                (end-of-defun)
                (point)))
-        (cmd (colisper--create-comby-command "-config ~/projets/colisper/src/patterns/ifprogn-to-when.toml -matcher .lisp -stdin -stdout")))
+        (cmd (colisper--create-comby-command
+              "-config" (colisper--create-rule-path "ifprogn-to-when.toml")
+              "-matcher" ".lisp"
+              "-stdin -stdout")))
     (shell-command-on-region beg end cmd t t)
     (indent-region beg end)
     (goto-char point)
@@ -94,7 +114,10 @@
          (end (save-excursion
                 (end-of-defun)
                 (point)))
-         (cmd (colisper--create-comby-command "-config ~/projets/colisper/src/patterns/remove-print.toml -matcher .lisp -stdin -stdout"))
+         (cmd (colisper--create-comby-command
+               "-config" (colisper--create-rule-path "remove-print.toml" )
+               "-matcher" ".lisp"
+               "-stdin -stdout"))
          (retcode (shell-command-on-region beg end cmd t t)))
     (cond
      ((= 0 retcode)
@@ -108,7 +131,10 @@
   "Check the current file with all rules. See the comby diff in a compilation buffer."
   (interactive)
   (let* ((filename (buffer-file-name))
-         (cmd  (colisper--create-comby-command "-config ~/projets/colisper/src/patterns/* -matcher .lisp -f " filename)))
+         (cmd  (colisper--create-comby-command
+                "-config" (colisper--create-rule-path "*")
+                "-matcher .lisp"
+                "-f" filename)))
     (message cmd)
     (compile cmd)))
 
@@ -120,7 +146,10 @@
                         (projectile-project-root)
                         " && "
                         ;; comby finds the files with the required extension itself. Thanks!
-                        (colisper--create-comby-command "-config ~/projets/colisper/src/patterns/* -matcher .lisp -f .lisp"))))
+                        (colisper--create-comby-command
+                         "-config" (colisper--create-rule-path "*")
+                         "-matcher .lisp"
+                         "-f" ".lisp"))))
 
 ;;;###autoload
 (defhydra colisper-defun-hydra (:color blue :columns 3)

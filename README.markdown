@@ -178,15 +178,22 @@ to:
 
 ## Emacs integration
 
-Place the cursor inside the function and call `M-x coliper--format-to-debug`.
+Set the path to the patterns directory, for example:
+
+    (setf colisper-patterns-path "~/projects/colisper/src/patterns")
 
 It replaces the function body with the new result.
 
-See:
+Call a hydra, that gives you the choice of the rule:
 
 - `colisper-[XXX]-hydra/body`: act on the current defun/file/project, where actions can be:
   -`…-check-file`: run all rules and display the diff in a compilation buffer,
   - `…-apply`: TODO
+
+
+Or call a rule directly. For example, place the cursor inside a
+function and call `M-x colisper--format-to-debug`.
+
 
 ## Run all rules with a script
 
