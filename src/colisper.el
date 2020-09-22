@@ -41,9 +41,15 @@
   :group 'colisper)
 
 (defcustom colisper-patterns-path ""
-  "Path to the comby rules, for example a directory of .toml files, each containing one or many rules."
+  "Path to the user's comby rules, for example a directory of .toml files, each containing one or many rules. Defaults to `colisper--default-patterns-path'."
   :type 'string
   :group 'colisper)
+
+(defvar colisper--default-patterns-path
+  (expand-file-name "patterns"
+                    (file-name-directory
+                     (or load-file-name buffer-file-name)))
+  "Default path to the Comby rules files.")
 
 (defun colisper--create-comby-command (cmd/string &rest args)
   "Prepend the comby path from `colisper-comby-path' to this command (a string), and also concatenate optional parameters (strings)."
@@ -53,17 +59,20 @@
                    (mapconcat 'identity args " "))
              " "))
 
+(defun colisper--get-patterns-path ()
+  "Return the path to the rules. Either the user's one, either our's."
+  (cond
+   ((not (string-empty-p colisper-patterns-path))
+    colisper-patterns-path)
+   (t
+    colisper--default-patterns-path)))
+
 (defun colisper--create-rule-path (rule)
   "Concatenate the path to the rules with this rule name (a .toml file, as string), and warn of possible misconfiguration."
-  (cond
-   ((string-empty-p colisper-patterns-path)
-    (warn "The path to the Comby rules appears null. You should set the variable `colisper-patterns-path'.")
-    rule)
-   (t
-    (concat colisper-patterns-path
-            (unless (string-suffix-p "/" colisper-patterns-path)
-              "/")
-            rule))))
+  (concat (colisper--get-patterns-path)
+          (unless (string-suffix-p "/" colisper-patterns-path)
+            "/")
+          rule))
 
 (defun colisper--test ()
   (print "Testing colisper--create-comby-command...")
@@ -176,4 +185,4 @@
   ("c" colisper-check-project "Check project"))
 
 (provide 'colisper)
-;;;colisper.el ends here
+;;; colisper.el ends here

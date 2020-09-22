@@ -1,6 +1,8 @@
-Structural refactoring recipes for Common Lisp with [Comby](https://comby.dev/).
+# colisper: structural refactoring recipes for Lisp with [Comby](https://comby.dev/).
 
-Proof of Work. Somewhat usable.
+*defined for Common Lisp, could work for any Lisp*
+
+Proof of Work. Testable.
 
 Comby makes it easy to match code structures. It can output a diff or
 change the code in-place.
@@ -25,7 +27,7 @@ a one-liner looks like:
 
     comby '(print :[rest])' ':[rest]' tests/playground.lisp
 
-### Transformat `format t …` to `log:debug`
+### Transform `format t …` to `log:debug`
 
 We are writing Lisp when suddenly, we want to rewrite some `format` to `log:debug`.
 
@@ -178,21 +180,21 @@ to:
 
 ## Emacs integration
 
-Set the path to the patterns directory, for example:
-
-    (setf colisper-patterns-path "~/projects/colisper/src/patterns")
-
-It replaces the function body with the new result.
+Load `colisper.el`.
 
 Call a hydra, that gives you the choice of the rule:
 
-- `colisper-[XXX]-hydra/body`: act on the current defun/file/project, where actions can be:
-  -`…-check-file`: run all rules and display the diff in a compilation buffer,
-  - `…-apply`: TODO
-
+- `colisper-[defun/file/project]-hydra/body`: act on the current defun/file/project, where the actions can be:
+  -`c`heck the file: run all rules and display the diff in a compilation buffer,
+  - `a`pply the rule(s): TODO
 
 Or call a rule directly. For example, place the cursor inside a
-function and call `M-x colisper--format-to-debug`.
+function and call `M-x colisper--format-to-debug`. It replaces the
+function body with the new result.
+
+You can customize the path to the patterns directory, for example:
+
+    (setf colisper-patterns-path "~/.config/colisper/patterns/")
 
 
 ## Run all rules with a script
