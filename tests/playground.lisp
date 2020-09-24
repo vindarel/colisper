@@ -23,6 +23,10 @@
 
 ;; Remove print.
 (push (hunchentoot:create-folder-dispatcher-and-handler
-         "/static/" (print (merge-pathnames *default-static-directory*
-                                            (asdf:system-source-directory :abstock))))
-        hunchentoot:*dispatch-table*)
+       "/static/" (print (merge-pathnames *default-static-directory*
+                                          (asdf:system-source-directory :abstock))))
+      hunchentoot:*dispatch-table*)
+
+;; equal and nil => null
+(let ((foo nil))
+  (assert (equal foo nil)))

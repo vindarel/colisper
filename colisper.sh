@@ -1,6 +1,10 @@
 #!/bin/sh
 
 # Run all rules and return 0 if no rule applied = success.
+#
+# - use -review
+# - correctly format the output (with trivial-formatter or emacs)
+# - integrate sblint or lisp-critic
 
 ARGCOUNT=1  # expect one argument, a lisp file.
 

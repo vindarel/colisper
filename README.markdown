@@ -178,6 +178,10 @@ to:
 
 (todo: indent correctly the last parenthesis)
 
+## Other rules
+
+- rewrite `(equal var nil)` to `(null var)`.
+
 ## Emacs integration
 
 Load `colisper.el`.
