@@ -24,6 +24,7 @@
 ;;; - [X] don't hardcode the patterns' path
 ;;; - [ ] the compilation buffer output is not usable with goto-next-error
 ;;; - [ ] all the rest.
+;;;   - interactively choose or reject edits: -review
 ;;;
 ;;; Implementation notes:
 ;;; - shell-command-on-region re-writes the region, even if it's an error message.
@@ -141,11 +142,31 @@
   (interactive)
   (let* ((filename (buffer-file-name))
          (cmd  (colisper--create-comby-command
-                "-config" (colisper--create-rule-path "*")
+                "-templates" (colisper--get-patterns-path)
                 "-matcher .lisp"
                 "-f" filename)))
     (message cmd)
     (compile cmd)))
+
+(defun colisper--replace-all ()
+  "Run and apply all rules in the current file. On success, indent the file."
+  (interactive)
+  (let* ((point (point))
+         (filename (buffer-file-name))
+         (cmd colisper-comby-path)
+         (retcode (call-process cmd
+                                nil
+                                t       ;; output: nil is "discard".
+                                t
+                                "-config" colisper-patterns-path
+                                "-in-place"
+                                "-f" filename)))
+    (cond
+      ((= 0 retcode)
+       (indent-region)
+       (goto-char point))
+      (t
+       (message "Comby error.")))))
 
 (defun colisper-check-project ()
   "Check the current project."
@@ -156,7 +177,7 @@
                         " && "
                         ;; comby finds the files with the required extension itself. Thanks!
                         (colisper--create-comby-command
-                         "-config" (colisper--create-rule-path "*")
+                         "-config" (colisper--get-catalog-path)
                          "-matcher .lisp"
                          "-f" ".lisp"))))
 

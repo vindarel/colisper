@@ -1,5 +1,0 @@
-[remove-print]
-
-match="(print :[rest])"
-
-rewrite=':[rest]'
