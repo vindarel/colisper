@@ -169,24 +169,28 @@
     (compile cmd)))
 
 (defun colisper--replace-all ()
-  "Run and apply all rules in the current file. On success, indent the file."
+  "Run and apply all rules in the current file. On success, indent and save the file.
+  You can check the result before with `colisper-check-file' (also see `colisper-file-hydra/body')."
   (interactive)
+  (save-buffer)
   (let* ((point (point))
          (filename (buffer-file-name))
          (cmd colisper-comby-path)
          (retcode (call-process cmd
                                 nil
-                                t       ;; output: nil is "discard".
+                                t ;; output: nil would be "discard".
                                 t
-                                "-config" colisper-catalog-path
+                                "-config" (colisper--get-catalog-path)
                                 "-in-place"
                                 "-f" filename)))
     (cond
-      ((= 0 retcode)
-       (indent-region)
-       (goto-char point))
-      (t
-       (message "Comby error.")))))
+     ((= 0 retcode)
+      (revert-buffer t t t) ;; use after-revert-hook?
+      (indent-region (point-min) (point-max))
+      (save-buffer)
+      (goto-char point))
+     (t
+      (message "Comby error.")))))
 
 (defun colisper-check-project ()
   "Check the current project."

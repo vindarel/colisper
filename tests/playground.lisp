@@ -1,11 +1,11 @@
 
 ;; Transform if… progn to when.
 (if (and (getf options :version)
-             (foo)
-             ;; comment (with parens even
-             #| nasty comment:
-             (if (test) (progn even)))
-             |#
+         (foo)
+         ;; comment (with parens even
+         #| nasty comment:
+         (if (test) (progn even)))
+         |#
          (bar))
     (progn
       (format t "Project version ~a~&" (format nil "v~a" +version+))
