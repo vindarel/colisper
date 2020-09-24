@@ -21,7 +21,7 @@
 ;;; TODOs:
 ;;; - [X] POC
 ;;; - [X] a hydra to choose defun/file/project and the replacement rule.
-;;; - [X] don't hardcode the patterns' path
+;;; - [X] don't hardcode the catalog' path
 ;;; - [ ] the compilation buffer output is not usable with goto-next-error
 ;;; - [ ] all the rest.
 ;;;   - interactively choose or reject edits: -review
@@ -41,13 +41,13 @@
   :type 'string
   :group 'colisper)
 
-(defcustom colisper-patterns-path ""
-  "Path to the user's comby rules, for example a directory of .toml files, each containing one or many rules. Defaults to `colisper--default-patterns-path'."
+(defcustom colisper-catalog-path ""
+  "Path to the user's comby rules, for example a directory of .toml files, each containing one or many rules. Defaults to `colisper--default-catalog-path'."
   :type 'string
   :group 'colisper)
 
-(defvar colisper--default-patterns-path
-  (expand-file-name "patterns"
+(defvar colisper--default-catalog-path
+  (expand-file-name "catalog/lisp"
                     (file-name-directory
                      (or load-file-name buffer-file-name)))
   "Default path to the Comby rules files.")
@@ -60,18 +60,18 @@
                    (mapconcat 'identity args " "))
              " "))
 
-(defun colisper--get-patterns-path ()
+(defun colisper--get-catalog-path ()
   "Return the path to the rules. Either the user's one, either our's."
   (cond
-   ((not (string-empty-p colisper-patterns-path))
-    colisper-patterns-path)
+   ((not (string-empty-p colisper-catalog-path))
+    colisper-catalog-path)
    (t
-    colisper--default-patterns-path)))
+    colisper--default-catalog-path)))
 
 (defun colisper--create-rule-path (rule)
   "Concatenate the path to the rules with this rule name (a .toml file, as string), and warn of possible misconfiguration."
-  (concat (colisper--get-patterns-path)
-          (unless (string-suffix-p "/" colisper-patterns-path)
+  (concat (colisper--get-catalog-path)
+          (unless (string-suffix-p "/" colisper-catalog-path)
             "/")
           rule))
 
@@ -142,7 +142,7 @@
   (interactive)
   (let* ((filename (buffer-file-name))
          (cmd  (colisper--create-comby-command
-                "-templates" (colisper--get-patterns-path)
+                "-templates" (colisper--get-catalog-path)
                 "-matcher .lisp"
                 "-f" filename)))
     (message cmd)
@@ -158,7 +158,7 @@
                                 nil
                                 t       ;; output: nil is "discard".
                                 t
-                                "-config" colisper-patterns-path
+                                "-config" colisper-catalog-path
                                 "-in-place"
                                 "-f" filename)))
     (cond

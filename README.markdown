@@ -196,9 +196,9 @@ Or call a rule directly. For example, place the cursor inside a
 function and call `M-x colisper--format-to-debug`. It replaces the
 function body with the new result.
 
-You can customize the path to the patterns directory, for example:
+You can customize the path to the catalog directory and use your own set of rules:
 
-    (setf colisper-patterns-path "~/.config/colisper/patterns/")
+    (setq colisper-catalog-path "~/.config/colisper/catalog/")
 
 
 ## Run all rules with a script
@@ -210,7 +210,7 @@ It returns 0 (success) if no rules were applied (code is good).
 TODO: write a real script.
 
 
-# Difficulties
+## Difficulties
 
 Rewriting doesn't respect indentation, so re-writing multiple lines is problematic.
 
@@ -241,5 +241,3 @@ This method doesn't know about Lisp internals (the symbols' package and all). Wo
 Let's build something useful!
 
 Thanks to Svetlyak40wt for [finding it out](https://github.com/svetlyak40wt/comby-test).
-
-See also https://github.com/s-kostyaev/comby.el/, that asks rules interactively.
