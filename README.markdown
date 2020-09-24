@@ -224,6 +224,15 @@ So we'll use our editor. Emacs has `indent-region`.
 
 Also, pair with https://github.com/hyotang666/trivial-formatter ?
 
+## See also:
+
+- [comby.el](https://github.com/s-kostyaev/comby.el/), that asks rules interactively,
+- [lisp-critic](https://github.com/g000001/lisp-critic/)
+- [sblint](https://github.com/cxxxr/sblint)
+
+<!-- https://github.com/jonase/kibit,
+     https://github.com/brunchboy/kibit-helper/blob/master/kibit-helper.el
+     clojure tool, nice options. -->
 
 ## Final words
 
