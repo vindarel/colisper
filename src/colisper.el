@@ -99,6 +99,23 @@
     (goto-char point)
     (beginning-of-line-text)))
 
+(defun colisper--debug-to-format ()
+  "Rewrite (log:debug …) to (format t …).
+
+  This rule is only for interactive use, it isn't in the general catalog."
+  (interactive)
+  (let ((point (point))
+        (beg (save-excursion
+               (beginning-of-defun)
+               (point)))
+        (end (save-excursion
+               (end-of-defun)
+               (point)))
+        (cmd (colisper--create-comby-command "'(log:debug :[rest])' '(format t :[rest])' -stdin -stdout -matcher .lisp")))
+    (shell-command-on-region beg end cmd t t)
+    (goto-char point)
+    (beginning-of-line-text)))
+
 
 (defun colisper--ifprogn-to-when ()
   (interactive)
@@ -191,6 +208,7 @@
   "
   ("p" colisper--remove-print "remove Prints")
   ("d" colisper--format-to-debug "format to Debug")
+  ("f" colisper--debug-to-format "debug to Format")
   ("i" colisper--ifprogn-to-when "If…progn to when"))
 
 ;;;###autoload
