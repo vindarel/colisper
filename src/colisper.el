@@ -83,6 +83,9 @@
     t))
 
 (defun colisper--format-to-debug ()
+  "Rewrite (format t …) to (log:debug …).
+
+  This rule is only for interactive use, it isn't in the general catalog."
   (interactive)
   (let ((point (point))
         (beg (save-excursion
@@ -91,7 +94,7 @@
         (end (save-excursion
                (end-of-defun)
                (point)))
-        (cmd (colisper--create-comby-command "'format :[stream] :[rest]' 'log:debug :[rest]' -stdin -stdout -matcher .lisp")))
+        (cmd (colisper--create-comby-command "'format t :[rest]' 'log:debug :[rest]' -stdin -stdout -matcher .lisp")))
     (shell-command-on-region beg end cmd t t)
     (goto-char point)
     (beginning-of-line-text)))

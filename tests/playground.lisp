@@ -8,7 +8,7 @@
              |#
          (bar))
     (progn
-      (format t "Project version ~a~&" +version+)
+      (format t "Project version ~a~&" (format nil "v~a" +version+))
       (print-system-info)
       (uiop:quit)))
 
