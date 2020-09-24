@@ -69,7 +69,7 @@
     colisper--default-catalog-path)))
 
 (defun colisper--create-rule-path (rule)
-  "Concatenate the path to the rules with this rule name (a .toml file, as string), and warn of possible misconfiguration."
+  "Concatenate the path to the catalog with this rule name (a directory or a .toml file, as string), and warn of possible misconfiguration."
   (concat (colisper--get-catalog-path)
           (unless (string-suffix-p "/" colisper-catalog-path)
             "/")
@@ -110,7 +110,7 @@
                (end-of-defun)
                (point)))
         (cmd (colisper--create-comby-command
-              "-config" (colisper--create-rule-path "ifprogn-to-when.toml")
+              "-config" (colisper--create-rule-path "ifprogn-to-when/")
               "-matcher" ".lisp"
               "-stdin -stdout")))
     (shell-command-on-region beg end cmd t t)
@@ -128,7 +128,7 @@
                 (end-of-defun)
                 (point)))
          (cmd (colisper--create-comby-command
-               "-config" (colisper--create-rule-path "remove-print.toml" )
+               "-config" (colisper--create-rule-path "remove-print/" )
                "-matcher" ".lisp"
                "-stdin -stdout"))
          (retcode (shell-command-on-region beg end cmd t t)))
