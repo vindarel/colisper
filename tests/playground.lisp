@@ -30,3 +30,7 @@
 ;; equal and nil => null
 (let ((foo nil))
   (assert (equal foo nil)))
+
+;; use uiop
+(cl-fad:file-exists-p #p"/path")
+(fad:file-exists-p #p"/path")

@@ -181,6 +181,7 @@ to:
 ## Other rules
 
 - rewrite `(equal var nil)` to `(null var)`.
+- change `(cl-fad:file-exists-p` or `(fad:file-exists-p` to using `uiop`.
 
 ## Emacs integration
 
