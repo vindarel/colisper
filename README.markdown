@@ -230,6 +230,8 @@ Also, pair with https://github.com/hyotang666/trivial-formatter ?
 - [comby.el](https://github.com/s-kostyaev/comby.el/), that asks rules interactively,
 - [lisp-critic](https://github.com/g000001/lisp-critic/)
 - [sblint](https://github.com/cxxxr/sblint)
+- [cl-indentify](https://github.com/yitzchak/cl-indentify/)
+- emacs' batch indent (`emacs-batch-indent.el`)
 
 <!-- https://github.com/jonase/kibit,
      https://github.com/brunchboy/kibit-helper/blob/master/kibit-helper.el
