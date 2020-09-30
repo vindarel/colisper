@@ -1,1 +1,1 @@
-:[prefix]:file-exists-p
+(:[prefix]:file-exists-p :[rest])

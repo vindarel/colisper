@@ -1,1 +1,1 @@
-uiop:file-exists-p
+(uiop:file-exists-p :[rest])
