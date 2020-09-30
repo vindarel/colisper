@@ -17,7 +17,7 @@ then
     exit 1
 fi
 
-PATTERNS_DIR=src/patterns/
+PATTERNS_DIR=src/catalog/
 
 returncode=1
 
