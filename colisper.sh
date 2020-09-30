@@ -17,7 +17,7 @@ then
     exit 1
 fi
 
-PATTERNS_DIR=src/catalog/
+PATTERNS_DIR=src/catalog/lisp/
 
 returncode=1
 
