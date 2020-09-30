@@ -2,8 +2,11 @@
 
 # Run all rules and return 0 if no rule applied = success.
 #
+# TODOs:
 # - use -review
 # - correctly format the output (with trivial-formatter or emacs)
+#
+# Nice to have:
 # - integrate sblint or lisp-critic
 
 ARGCOUNT=1  # expect one argument, a lisp file.
@@ -16,7 +19,7 @@ fi
 
 PATTERNS_DIR=src/patterns/
 
-returncode=0
+returncode=1
 
 # XXX: -config / -templates accept a directory as argument or more than one comma-separated paths to toml files.
 # But then how do we check that ONE rule failed?
@@ -30,12 +33,13 @@ done
 
 # return code is 0 if there was no output, no rule to apply.
 # all this files mess because I can't sum a variable in bash.
-returncode=$(cat .allresults.txt | wc -l)
-# echo $returncode
+if [ -f .allresults.txt ] ; then
+    returncode=$(cat .allresults.txt | wc -l)
+    # echo $returncode
 
-# check file exists
-rm .result.txt
-rm .allresults.txt
+    rm .result.txt
+    rm .allresults.txt
+fi
 
 if [ $returncode = 0 ] ; then
     echo "All OK."
