@@ -181,7 +181,8 @@ to:
 ## Other rules
 
 - rewrite `(equal var nil)` to `(null var)`.
-- change `(cl-fad:file-exists-p` or `(fad:file-exists-p` to using `uiop`.
+- rewrite `(cl-fad:file-exists-p` or `(fad:file-exists-p` to using `uiop`.
+- rewrite `(funcall 'fn args)` to using a `#'` (respect lexical scope).
 
 ## Emacs integration
 
