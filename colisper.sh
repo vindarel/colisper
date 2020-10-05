@@ -9,15 +9,28 @@
 # Nice to have:
 # - integrate sblint or lisp-critic
 
+VERSION=$(cat VERSION)
+
 ARGCOUNT=1  # expect one argument, a lisp file.
 
 INPLACE=1
 COMBY_INPLACE=""
 EMACS_BATCH_FN="indent-file"
 
-if [ $# -lt "$ARGCOUNT" ]
+REVIEW=1
+COMBY_REVIEW="-review"
+
+help() {
+    echo "colisper v"$VERSION
+    echo "Usage: `basename $0` [--in-place] somefile.lisp"
+    echo
+    echo "  [--in-place]: write changes (correct indentation depends on emacs)."
+}
+
+if [ $# -lt "$ARGCOUNT" ] || [ $1 = "--help" ] || [ $1 = "-h" ]
 then
-    echo "Usage: `basename $0` somefile.lisp"
+    # echo "Usage: `basename $0` somefile.lisp"
+    help
     exit 1
 fi
 
