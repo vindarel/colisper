@@ -9,11 +9,9 @@ change the code in-place.
 
 We define rules for lisp.
 
-We can call them from our favorite editor (here, Emacs) during
-development (the editor which also helps format the replacements
-correctly, like to fix indentation).
+We can call them from our favorite editor (Emacs) during development.
 
-And we can run them on some file(s) as a pre-commit hook or in a CI.
+And we can run them as a pre-commit hook or in a CI.
 
 ## Demo
 
@@ -21,7 +19,7 @@ Here are my practical use cases.
 
 You can try by cloning the repo and using this comby command:
 
-    comby -config ~/path/to/combycl/src/patterns/remove-print.toml -f tests/playground.lisp
+    comby -config ~/path/to/combycl/src/catalog/lisp -f tests/playground.lisp
 
 a one-liner looks like:
 
@@ -43,9 +41,7 @@ We are writing Lisp when suddenly, we want to rewrite some `format` to `log:debu
   (render-template* +product-created.html+ nil))
 ```
 
-Install comby and call
-
-    comby 'format :[stream] :[rest]' 'log:debug :[rest]' file.lisp
+I call `M-x colisper--format-to-debug` (or I use a Hydra to find the rule among others) and I get:
 
 
 ```dif
@@ -65,60 +61,13 @@ Install comby and call
    (render-template* +product-created.html+ nil))
 ```
 
-Note that we might actually want to keep the `(format *error-output*…)` as is.
+With Comby:
 
-It seems we don't leverage Comby's power here. But this rule still
-works with multilines:
+    comby 'format :[stream] :[rest]' 'log:debug :[rest]' file.lisp
 
-```lisp
-(defun product-create-route/post ("/create" :method :post)
-  (title price)
-  (format
-   t
-   "title is ~a~&"
-   title)
-  (format
-   t
-   "price is ~a~&"
-   price)
-  (handler-case
-      (make-product :title title)
-    (error (c)
-      (format *error-output*
-              "ooops: ~a"
-              c)))
-  (render-template* +product-created.html+ nil))
-```
-
-```diff
------- foo.lisp
-++++++ foo.lisp
-@|-6,18 +6,13 ============================================================
- |
- |(defun product-create-route/post ("/create" :method :post)
- |  (title price)
--|  (format
--|   t
--|   "title is ~a~&"
-+|  (log:debug "title is ~a~&"
--|   title)
--|  (format
--|   t
--|   "price is ~a~&"
-+|   title)
-+|  (log:debug "price is ~a~&"
- |   price)
- |  (handler-case
- |      (make-product :title title)
- |    (error (c)
--|      (format *error-output*
--|              "ooops: ~a"
-+|      (log:debug "ooops: ~a"
- |              c)))
- |  (render-template* +product-created.html+ nil))
-```
-
-And Comby will shine more when we have to span s-expressions.
+It seems that the search & replace is simple enough and that we don't
+leverage Comby's power here. But Comby works easily with multilines,
+comments, and it will shine even more when we match s-expressions delimiters.
 
 ## Remove any `print`
 
@@ -195,6 +144,8 @@ Or call a rule directly. For example, place the cursor inside a
 function and call `M-x colisper--format-to-debug`. It replaces the
 function body with the new result.
 
+### Customization
+
 You can customize the path to the catalog directory and use your own set of rules:
 
     (setq colisper-catalog-path "~/.config/colisper/catalog/")
@@ -224,17 +175,17 @@ Comby doesn't respect indentation on rewriting, so we have to rely on another to
 
 https://comby.dev/docs/faq
 
-- [ ] interactively accept or reject changes (comby -review)
+- [X] interactively accept or reject changes (comby -review)
+  - done with the shell script (use `comby -review`), not on Emacs, but we can use Magit.
 
 
 ## See also:
 
 - [trivial-formatter](https://github.com/hyotang666/trivial-formatter)
-- [comby.el](https://github.com/s-kostyaev/comby.el/), that asks rules interactively,
 - [lisp-critic](https://github.com/g000001/lisp-critic/)
 - [sblint](https://github.com/cxxxr/sblint)
 - [cl-indentify](https://github.com/yitzchak/cl-indentify/)
-- emacs' batch indent (`emacs-batch-indent.el`)
+- [comby.el](https://github.com/s-kostyaev/comby.el/), that asks rules interactively,
 
 <!-- https://github.com/jonase/kibit,
      https://github.com/brunchboy/kibit-helper/blob/master/kibit-helper.el
@@ -247,3 +198,5 @@ This method doesn't know about Lisp internals (the symbols' package and all). Wo
 Let's build something useful!
 
 Thanks to Svetlyak40wt for [finding it out](https://github.com/svetlyak40wt/comby-test).
+
+AGPLv3
