@@ -15,7 +15,8 @@
    (delete-trailing-whitespace)
    (when save
      (save-buffer))
-   (princ (buffer-string)))
+   ;; (princ (buffer-string))
+   )
 
 (defun indent-and-save ()
   (indent-file t))
