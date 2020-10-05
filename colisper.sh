@@ -3,13 +3,17 @@
 # Run all rules and return 0 if no rule applied = success.
 #
 # TODOs:
-# - use -review
-# - correctly format the output (with trivial-formatter or emacs)
+# - [X] use -review
+# - [X] correctly format the output (with trivial-formatter or emacs)
 #
 # Nice to have:
 # - integrate sblint or lisp-critic
 
-VERSION=$(cat VERSION)
+
+# emacs --batch needs a full path.
+SCRIPT_HOME=$(dirname $0)
+
+VERSION=$(cat $SCRIPT_HOME/VERSION)
 
 ARGCOUNT=1  # expect one argument, a lisp file.
 
@@ -35,7 +39,7 @@ then
     exit 1
 fi
 
-PATTERNS_DIR=src/catalog/lisp/
+PATTERNS_DIR=$SCRIPT_HOME/src/catalog/lisp/
 
 returncode=1
 
@@ -54,27 +58,30 @@ for arg in "$@" ; do
     fi
 done
 
+result_txt=$SCRIPT_HOME/.result.txt
+all_results_txt=$SCRIPT_HOME/.allresults.txt
 
 # idea: separate rules into categories, take the one for code checking only.
 if [ $REVIEW = 0 ] ; then
         comby -config $PATTERNS_DIR $COMBY_REVIEW -f $1
 else
-    comby -config $PATTERNS_DIR $COMBY_INPLACE -f $1 > .result.txt && \
-        cat .result.txt >> .allresults.txt && \
-        cat .result.txt
+    comby -config $PATTERNS_DIR $COMBY_INPLACE -f $1 > $result_txt && \
+        cat $result_txt >> $all_results_txt && \
+        cat $result_txt
 fi
 
 # return code is 0 if there was no output, no rule to apply.
 # Comby always returns 0, so this files mess is to check if there were edits, and exit with an error code.
-if [ -f .allresults.txt ] ; then
-    returncode=$(cat .allresults.txt | wc -l)
-    rm .result.txt
-    rm .allresults.txt
+if [ -f $all_results_txt ] ; then
+    returncode=$(cat $all_results_txt | wc -l)
+    rm $result_txt
+    rm $all_results_txt
 fi
 
-if [ $INPLACE ] ; then
+if [ $INPLACE ] && [ $returncode != 0 ] ; then
     if [ $(which emacs) ] ; then
-        emacs -Q --batch $@ -l ~/projets/colisper/emacs-batch-indent.el -f $EMACS_BATCH_FN
+        # mmh is PWD solid?
+        emacs -Q --batch $@ -l $SCRIPT_HOME/emacs-batch-indent.el -f $EMACS_BATCH_FN
     else
         echo "! emacs executable not found. We won't indent the file."
     fi
