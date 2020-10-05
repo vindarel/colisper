@@ -1,4 +1,4 @@
-# colisper: structural refactoring recipes for Lisp with [Comby](https://comby.dev/).
+# colisper: static code checking and refactoring with [Comby](https://comby.dev/).
 
 *defined for Common Lisp, could work for any Lisp*
 
@@ -12,6 +12,28 @@ We define rules for lisp.
 We can call them from our favorite editor (Emacs) during development.
 
 And we can run them as a pre-commit hook or in a CI.
+
+<!-- drop the first elt:
+ (custom-set-variables '(markdown-toc-user-toc-structure-manipulation-fn 'cdr))
+ -->
+<!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-refresh-toc -->
+**Table of Contents**
+
+- [Demo](#demo)
+    - [Transform `format t …` to `log:debug`](#transform-format-t--to-logdebug)
+    - [Remove any `print`](#remove-any-print)
+    - [Rewrite `if … progn` to `when`](#rewrite-if--progn-to-when)
+    - [Other rules](#other-rules)
+- [Installation](#installation)
+- [Emacs integration](#emacs-integration)
+    - [Customization](#customization)
+- [Run all rules with a script](#run-all-rules-with-a-script)
+- [TODOs and ideas](#todos-and-ideas)
+- [See also:](#see-also)
+- [Final words](#final-words)
+
+<!-- markdown-toc end -->
+
 
 ## Demo
 
@@ -27,7 +49,7 @@ a one-liner looks like:
 
 ### Transform `format t …` to `log:debug`
 
-We are writing Lisp when suddenly, we want to rewrite some `format` to `log:debug`.
+We are writing Lisp when suddenly, we want to rewrite some `format` to `log:debug` (or the contrary).
 
 ```lisp
 (defun product-create-route/post ("/create" :method :post)
@@ -69,7 +91,7 @@ It seems that the search & replace is simple enough and that we don't
 leverage Comby's power here. But Comby works easily with multilines,
 comments, and it will shine even more when we match s-expressions delimiters.
 
-## Remove any `print`
+### Remove any `print`
 
 We are using `print` for debugging purposes when suddenly, our code is
 ready for production use.
@@ -91,7 +113,7 @@ ready for production use.
 ~~~
 
 
-## Rewrite `if … progn` to `when`
+### Rewrite `if … progn` to `when`
 
 Rewrite:
 
@@ -124,11 +146,18 @@ to:
   (uiop:quit))
 ```
 
-## Other rules
+### Other rules
 
 - rewrite `(equal var nil)` to `(null var)`.
 - rewrite `(cl-fad:file-exists-p` or `(fad:file-exists-p` to using `uiop`.
 - rewrite `(funcall 'fn args)` to using a `#'` (respect lexical scope).
+
+## Installation
+
+Clone this repository. You can use an alias to `colisper.sh`.
+
+    alias colisper=~/path/to/colisper/colisper.sh
+
 
 ## Emacs integration
 
@@ -153,14 +182,17 @@ You can customize the path to the catalog directory and use your own set of rule
 
 ## Run all rules with a script
 
-    ./colisper.sh [--in-place] file.lisp
+    ./colisper.sh [--in-place] [--review] file.lisp
 
-By default, only check the rules and print the diff on stdout. With
-`--in-place`, write the changes to file (and indent it correctly with emacs).
+By default, only check the rules and print the diff on stdout.
+
+With `--in-place`, write the changes to file (and indent them correctly with emacs).
+
+With `--review` (`comby -review`), interactively accept or reject changes.
 
 It returns 0 (success) if no rules were applied (code is good).
 
-TODO: write a real script.
+TODO: write a solid script.
 
 
 ## TODOs and ideas
@@ -178,6 +210,7 @@ https://comby.dev/docs/faq
 - [X] interactively accept or reject changes (comby -review)
   - done with the shell script (use `comby -review`), not on Emacs, but we can use Magit.
 
+- [ ] differentiate rules for CL, Elisp and friends.
 
 ## See also:
 
