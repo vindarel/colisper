@@ -2,7 +2,7 @@
 
 *defined for Common Lisp, could work for any Lisp*
 
-Proof of Work. Testable.
+Status: beta, usable.
 
 Comby makes it easy to match code structures. It can output a diff or
 change the code in-place.
@@ -172,11 +172,8 @@ to:
            (bar))
   (format t "Project version ~a~&" +version+)
   (print-system-info)
-  (uiop:quit)
-  )
+  (uiop:quit))
 ```
-
-(todo: indent correctly the last parenthesis)
 
 ## Other rules
 
@@ -205,29 +202,34 @@ You can customize the path to the catalog directory and use your own set of rule
 
 ## Run all rules with a script
 
-    ./colisper.sh [file.lisp]
+    ./colisper.sh [--in-place] file.lisp
+
+By default, only check the rules and print the diff on stdout. With
+`--in-place`, write the changes to file (and indent it correctly with emacs).
 
 It returns 0 (success) if no rules were applied (code is good).
 
 TODO: write a real script.
 
 
-## Difficulties
+## TODOs and ideas
 
-Rewriting doesn't respect indentation, so re-writing multiple lines is problematic.
+- [X] re-indent the file.
 
-https://comby.dev/docs/faq
+Comby doesn't respect indentation on rewriting, so we have to rely on another tool. We currently do with an `emacs --batch` command, and use the built-in `indent-region`.
 
 > What is Comby not good at?
 
 > When talking about matching or changing code, Comby is not well-suited to stylistic changes and formatting like "insert a line break after 80 characters". Pair Comby with a language-specific formatter to preserve formatting (like gofmt for the Go language) after performing a change.
 
-So we'll use our editor. Emacs has `indent-region`.
+https://comby.dev/docs/faq
 
-Also, pair with https://github.com/hyotang666/trivial-formatter ?
+- [ ] interactively accept or reject changes (comby -review)
+
 
 ## See also:
 
+- [trivial-formatter](https://github.com/hyotang666/trivial-formatter)
 - [comby.el](https://github.com/s-kostyaev/comby.el/), that asks rules interactively,
 - [lisp-critic](https://github.com/g000001/lisp-critic/)
 - [sblint](https://github.com/cxxxr/sblint)
