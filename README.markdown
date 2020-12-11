@@ -234,4 +234,4 @@ Let's build something useful!
 
 Thanks to Svetlyak40wt for [finding it out](https://github.com/svetlyak40wt/comby-test).
 
-AGPLv3
+LLGPLv3
