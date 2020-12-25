@@ -1,0 +1,2 @@
+(when (:[test])
+  (error "colisper found a 'when' with a missing body. (we should error the script without this rewrite!)"))

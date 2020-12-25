@@ -34,3 +34,12 @@
 ;; use uiop
 (cl-fad:file-exists-p #p"/path")
 (fad:file-exists-p #p"/path")
+
+;; when with no body
+(when (or (= a 0)
+          (= a 1)
+          (* a a)))
+
+(when (or (= a 0)
+          (= a 1))
+  (* a a))
