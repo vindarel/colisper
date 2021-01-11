@@ -41,7 +41,7 @@ Here are my practical use cases.
 
 You can try by cloning the repo and using this comby command:
 
-    colisper tests/playground
+    colisper tests/playground.lisp
 
 aka
 
@@ -170,6 +170,42 @@ Clone this repository. You can use an alias to `colisper.sh`:
     alias colisper=~/path/to/colisper/colisper.sh
 
 
+## Run all rules with a script
+
+    ./colisper.sh [--in-place] [--review] [file.lisp]
+
+By default, only check the rules and print the diff on stdout.
+
+If you don't give files as arguments, run the rules on all .lisp files of the current directory and its subdirectories.
+
+With `--in-place`, write the changes to file (and indent them correctly with emacs).
+
+With `--review` (`comby -review`), interactively accept or reject changes.
+
+It returns 0 (success) if no rules were applied (code is good).
+
+TODO: write a solid script.
+
+### Run on a project
+
+TLDR;
+
+    cd src/ && colisper
+
+This finds all `.lisp` files in subdirectories to run the Colisper rules on them.
+
+Comby understands file extensions:
+
+    comby -config comby.toml -f .lisp
+
+but it doesn't handle wildcards very well, so it's better to `cd` into
+your source directory before running Comby/Colisper.
+
+Moreover:
+
+> You can add additional flags, like -i, -exclude, -matcher and so on, as usual.
+
+
 ## Emacs integration
 
 Load `colisper.el`.
@@ -192,39 +228,6 @@ You can customize the path to the catalog directory and use your own set of rule
 
     (setq colisper-catalog-path "~/.config/colisper/catalog/")
 
-
-## Run all rules with a script
-
-    ./colisper.sh [--in-place] [--review] [file.lisp]
-
-By default, only check the rules and print the diff on stdout.
-
-If you don't give files as arguments, run on all .lisp files of the current directory.
-
-With `--in-place`, write the changes to file (and indent them correctly with emacs).
-
-With `--review` (`comby -review`), interactively accept or reject changes.
-
-It returns 0 (success) if no rules were applied (code is good).
-
-TODO: write a solid script.
-
-### Run on a project
-
-TLDR;
-
-    cd src/ && colisper
-
-Comby understands file extensions:
-
-    comby -config comby.toml -f .lisp
-
-but it doesn't handle wildcards very well, so it's better to `cd` into
-your source directory before running Comby/Colisper.
-
-Moreover:
-
-> You can add additional flags, like -i, -exclude, -matcher and so on, as usual.
 
 
 ## TODOs and ideas
