@@ -41,9 +41,13 @@ Here are my practical use cases.
 
 You can try by cloning the repo and using this comby command:
 
-    comby -config ~/path/to/combycl/src/catalog/lisp -f tests/playground.lisp
+    colisper tests/playground
 
-a one-liner looks like:
+aka
+
+    comby -config ~/path/to/combycl/src/catalog/lisp/base -f tests/playground.lisp
+
+a one-liner with inline rewrite rules looks like:
 
     comby '(print :[rest])' ':[rest]' tests/playground.lisp
 
@@ -161,7 +165,7 @@ Some other available rules:
 
 ## Installation
 
-Clone this repository. You can use an alias to `colisper.sh`.
+Clone this repository. You can use an alias to `colisper.sh`:
 
     alias colisper=~/path/to/colisper/colisper.sh
 
@@ -169,6 +173,8 @@ Clone this repository. You can use an alias to `colisper.sh`.
 ## Emacs integration
 
 Load `colisper.el`.
+
+Call `colisper-check-file`.
 
 Call a hydra, that gives you the choice of the rule:
 
@@ -189,9 +195,11 @@ You can customize the path to the catalog directory and use your own set of rule
 
 ## Run all rules with a script
 
-    ./colisper.sh [--in-place] [--review] file.lisp
+    ./colisper.sh [--in-place] [--review] [file.lisp]
 
 By default, only check the rules and print the diff on stdout.
+
+If you don't give files as arguments, run on all .lisp files of the current directory.
 
 With `--in-place`, write the changes to file (and indent them correctly with emacs).
 
@@ -200,6 +208,23 @@ With `--review` (`comby -review`), interactively accept or reject changes.
 It returns 0 (success) if no rules were applied (code is good).
 
 TODO: write a solid script.
+
+### Run on a project
+
+TLDR;
+
+    cd src/ && colisper
+
+Comby understands file extensions:
+
+    comby -config comby.toml -f .lisp
+
+but it doesn't handle wildcards very well, so it's better to `cd` into
+your source directory before running Comby/Colisper.
+
+Moreover:
+
+> You can add additional flags, like -i, -exclude, -matcher and so on, as usual.
 
 
 ## TODOs and ideas

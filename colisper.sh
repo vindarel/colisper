@@ -2,6 +2,8 @@
 
 # Run all rules and return 0 if no rule applied = success.
 #
+# Accept source files as argument, or run on the .lisp files of the current directory.
+#
 # TODOs:
 # - [X] use -review
 # - [X] correctly format the output (with trivial-formatter or emacs)
@@ -19,8 +21,6 @@ fi
 
 VERSION=$(cat $SCRIPT_HOME/VERSION)
 
-ARGCOUNT=1  # expect one argument, a lisp file.
-
 INPLACE=0
 COMBY_INPLACE=""
 EMACS_BATCH_FN="indent-file"
@@ -30,15 +30,15 @@ COMBY_REVIEW=""
 
 help() {
     echo "colisper v"$VERSION
-    echo "Usage: `basename $0` [--in-place] somefile.lisp"
+    echo "Usage: `basename $0` [--in-place] [somefile.lisp]"
     echo
     echo "  [--in-place]: write changes (correct indentation depends on emacs)."
     echo "  [--review]: interactively accept or reject changes (comby -review)"
+    echo
+    echo "Run on the given file or on all .lisp files of the current directory."
 }
 
-if [ $# -lt "$ARGCOUNT" ] || [ $1 = "--help" ] || [ $1 = "-h" ]
-then
-    # echo "Usage: `basename $0` somefile.lisp"
+if [ $# -gt 1 ] && [ $1 = "--help" -o $1 = "-h" ] ; then
     help
     exit 1
 fi
@@ -62,14 +62,20 @@ for arg in "$@" ; do
     fi
 done
 
+# Rest of the CLI arguments: one or many files. If none are passed, assume all .lisp files.
+REMAINING_ARGS=$@
+if [ $# -eq 0 ] ; then
+    REMAINING_ARGS=.lisp
+fi
+
 result_txt=$SCRIPT_HOME/.result.txt
 all_results_txt=$SCRIPT_HOME/.allresults.txt
 
 # idea: separate rules into categories, take the one for code checking only.
 if [ $REVIEW -eq 1 ] ; then
-        comby -config $PATTERNS_DIR $COMBY_REVIEW -f $1
+        comby -config $PATTERNS_DIR $COMBY_REVIEW -f $REMAINING_ARGS
 else
-    comby -config $PATTERNS_DIR $COMBY_INPLACE -f $1 > $result_txt && \
+    comby -config $PATTERNS_DIR $COMBY_INPLACE -f $REMAINING_ARGS > $result_txt && \
         cat $result_txt >> $all_results_txt && \
         cat $result_txt
 fi
@@ -84,7 +90,7 @@ fi
 
 if [ $INPLACE -eq 1 ] && [ $returncode != 0 ] ; then
     if [ $(which emacs) ] ; then
-        emacs -Q --batch $@ -l $SCRIPT_HOME/emacs-batch-indent.el -f $EMACS_BATCH_FN
+        emacs -Q --batch $REMAINING_ARGS -l $SCRIPT_HOME/emacs-batch-indent.el -f $EMACS_BATCH_FN
     else
         echo "! emacs executable not found. We won't indent the file."
     fi
