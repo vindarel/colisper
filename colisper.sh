@@ -12,6 +12,11 @@
 
 # emacs --batch needs a full path.
 SCRIPT_HOME=$(dirname $0)
+# inside the colisper directory, dirname returns ".", we want to full path...
+if [ $SCRIPT_HOME = "." ] ; then
+    SCRIPT_HOME=$(pwd)
+fi
+
 
 VERSION=$(cat $SCRIPT_HOME/VERSION)
 
