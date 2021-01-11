@@ -17,16 +17,15 @@ if [ $SCRIPT_HOME = "." ] ; then
     SCRIPT_HOME=$(pwd)
 fi
 
-
 VERSION=$(cat $SCRIPT_HOME/VERSION)
 
 ARGCOUNT=1  # expect one argument, a lisp file.
 
-INPLACE=1
+INPLACE=0
 COMBY_INPLACE=""
 EMACS_BATCH_FN="indent-file"
 
-REVIEW=1
+REVIEW=0
 COMBY_REVIEW=""
 
 help() {
@@ -50,14 +49,14 @@ returncode=1
 
 for arg in "$@" ; do
     if [ "-in-place" = $1 ] || [ $1 = "--in-place" ] ; then
-        INPLACE=0
+        INPLACE=1
         COMBY_INPLACE="-in-place"
         EMACS_BATCH_FN="indent-and-save"
         shift
     fi
 
     if [ $1 = "--review" ] || [ $1 = "-review" ] ; then
-        REVIEW=0
+        REVIEW=1
         COMBY_REVIEW="-review"
         shift
     fi
@@ -67,7 +66,7 @@ result_txt=$SCRIPT_HOME/.result.txt
 all_results_txt=$SCRIPT_HOME/.allresults.txt
 
 # idea: separate rules into categories, take the one for code checking only.
-if [ $REVIEW = 0 ] ; then
+if [ $REVIEW -eq 1 ] ; then
         comby -config $PATTERNS_DIR $COMBY_REVIEW -f $1
 else
     comby -config $PATTERNS_DIR $COMBY_INPLACE -f $1 > $result_txt && \
@@ -83,16 +82,20 @@ if [ -f $all_results_txt ] ; then
     rm $all_results_txt
 fi
 
-if [ $INPLACE ] && [ $returncode != 0 ] ; then
+if [ $INPLACE -eq 1 ] && [ $returncode != 0 ] ; then
     if [ $(which emacs) ] ; then
-        # mmh is PWD solid?
         emacs -Q --batch $@ -l $SCRIPT_HOME/emacs-batch-indent.el -f $EMACS_BATCH_FN
     else
         echo "! emacs executable not found. We won't indent the file."
     fi
 fi
 
-if [ $returncode = 0 ] ; then
+if [ $returncode -eq 0 ] && [ $INPLACE -eq 0 ] ; then
     echo "All OK."
+elif [ $returncode -eq 0 ] && [ $INPLACE -eq 1 ] ; then
+    # XXX: Comby doesn't tell if it found rules or not. Because we passed the -in-place flag,
+    # it always returns 0 as return code. We don't know if some rules applied.
+    # We might want to run Comby twice.
+    echo "All files written in-place."
 fi
 exit $returncode
