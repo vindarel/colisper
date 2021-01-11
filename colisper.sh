@@ -43,7 +43,7 @@ then
     exit 1
 fi
 
-PATTERNS_DIR=$SCRIPT_HOME/src/catalog/lisp/
+PATTERNS_DIR=$SCRIPT_HOME/src/catalog/lisp/base/
 
 returncode=1
 

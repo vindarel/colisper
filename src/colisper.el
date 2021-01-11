@@ -47,7 +47,7 @@
   :group 'colisper)
 
 (defvar colisper--default-catalog-path
-  (expand-file-name "catalog/lisp"
+  (expand-file-name "catalog/lisp/interactive"
                     (file-name-directory
                      (or load-file-name buffer-file-name)))
   "Default path to the Comby rules files.")

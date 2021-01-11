@@ -148,6 +148,13 @@ to:
 
 ### Other rules
 
+There are two kinds of rules:
+
+- the base ones (`catalog/base/`),
+- as well as rules that only make sense for interactive use (`catalog/interactive/`).
+
+Some other available rules:
+
 - rewrite `(equal var nil)` to `(null var)`.
 - rewrite `(cl-fad:file-exists-p` or `(fad:file-exists-p` to using `uiop`.
 - rewrite `(funcall 'fn args)` to using a `#'` (respect lexical scope).
@@ -210,6 +217,7 @@ https://comby.dev/docs/faq
 - [X] interactively accept or reject changes (comby -review)
   - done with the shell script (use `comby -review`), not on Emacs, but we can use Magit.
 
+- [X] differentiate rules that are made for live refactoring only, and rules for anti-pattern checks. => base/ and interactive/
 - [ ] differentiate rules for CL, Elisp and friends.
 
 <a href='https://ko-fi.com/K3K828W0V' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://cdn.ko-fi.com/cdn/kofi2.png?v=2' border='0' alt='Buy Me a Coffee at ko-fi.com' title="Thanks!"/></a>
