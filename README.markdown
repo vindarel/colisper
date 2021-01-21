@@ -13,6 +13,8 @@ We can call them from our favorite editor (Emacs) during development.
 
 And we can run them as a pre-commit hook or in a CI.
 
+![](colisper-cli.png)
+
 <!-- drop the first elt:
  (custom-set-variables '(markdown-toc-user-toc-structure-manipulation-fn 'cdr))
  -->
@@ -25,9 +27,10 @@ And we can run them as a pre-commit hook or in a CI.
     - [Rewrite `if … progn` to `when`](#rewrite-if--progn-to-when)
     - [Other rules](#other-rules)
 - [Installation](#installation)
+- [Run all rules with a script](#run-all-rules-with-a-script)
+    - [Run on a project](#run-on-a-project)
 - [Emacs integration](#emacs-integration)
     - [Customization](#customization)
-- [Run all rules with a script](#run-all-rules-with-a-script)
 - [TODOs and ideas](#todos-and-ideas)
 - [See also:](#see-also)
 - [Final words](#final-words)
