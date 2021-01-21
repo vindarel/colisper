@@ -21,6 +21,8 @@ fi
 
 VERSION=$(cat $SCRIPT_HOME/VERSION)
 
+COMBY_EXEC=comby
+
 INPLACE=0
 COMBY_INPLACE=""
 EMACS_BATCH_FN="indent-file"
@@ -73,9 +75,9 @@ all_results_txt=$SCRIPT_HOME/.allresults.txt
 
 # idea: separate rules into categories, take the one for code checking only.
 if [ $REVIEW -eq 1 ] ; then
-        comby -config $PATTERNS_DIR $COMBY_REVIEW -f $REMAINING_ARGS
+        $COMBY_EXEC -config $PATTERNS_DIR $COMBY_REVIEW -f $REMAINING_ARGS
 else
-    comby -config $PATTERNS_DIR $COMBY_INPLACE -f $REMAINING_ARGS > $result_txt && \
+    $COMBY_EXEC -config $PATTERNS_DIR $COMBY_INPLACE -f $REMAINING_ARGS > $result_txt && \
         cat $result_txt >> $all_results_txt && \
         cat $result_txt
 fi
