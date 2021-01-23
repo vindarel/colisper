@@ -1,0 +1,3 @@
+(when (and (not :[test])
+           (:[test2]))
+  (:[body]))

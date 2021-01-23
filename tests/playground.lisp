@@ -43,3 +43,17 @@
 (when (or (= a 0)
           (= a 1))
   (* a a))
+
+;; UNLESS followed by WHEN (and no other form) should be merged together.
+(let ((x 10))
+  (unless (zerop x)
+    (when (plusp x)
+      (print x))))
+
+;; good:
+(let ((x 10))
+  (unless (zerop x)
+    (when (plusp x)
+      (print x))
+    (when (other-p x)
+      (do-other x))))
