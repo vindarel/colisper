@@ -57,3 +57,16 @@
       (print x))
     (when (other-p x)
       (do-other x))))
+
+;; SORT is destructive, so it is usually paired wit COPY-SEQ.
+(let ((list (list 3 2 1)))
+  (sort list))
+
+(sort *list*)  ;; currently unmatched :S
+;; Tried this rule:
+;; where match :[rest] {
+;; | ":[_~*copy-seq*]" -> false
+;; | ":[_]" -> true
+;; }
+(sort (if foo bar baz))
+(sort (copy-seq "ok"))
