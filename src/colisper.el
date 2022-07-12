@@ -157,6 +157,28 @@
      (t
       (message "Comby error.")))))
 
+(defun colisper--remove-debug-log ()
+  (interactive)
+  (let* ((point (point))
+         (beg (save-excursion
+                (beginning-of-defun)
+                (point)))
+         (end (save-excursion
+                (end-of-defun)
+                (point)))
+         (cmd (colisper--create-comby-command
+               "-config" (colisper--create-rule-path "remove-debug-log/" )
+               "-matcher" ".lisp"
+               "-stdin -stdout"))
+         (retcode (shell-command-on-region beg end cmd t t)))
+    (cond
+     ((= 0 retcode)
+      (indent-region beg end)
+      (goto-char point)
+      (beginning-of-line-text))
+     (t
+      (message "Comby error.")))))
+
 (defun colisper-check-file ()
   "Check the current file with all rules. See the comby diff in a compilation buffer."
   (interactive)

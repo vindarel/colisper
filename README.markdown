@@ -165,6 +165,10 @@ Some other available rules:
 - rewrite `(equal var nil)` to `(null var)`.
 - rewrite `(cl-fad:file-exists-p` or `(fad:file-exists-p` to using `uiop`.
 - rewrite `(funcall 'fn args)` to using a `#'` (respect lexical scope).
+- check that `sort` is followed by `copy-seq` (WIP: we match the simplest expression of the form `(sort variable)`)
+
+You can see `test/playground.lisp` for an overview of all available checks.
+
 
 ## Installation
 
