@@ -214,7 +214,7 @@
      (t
       (message "Comby error.")))))
 
-(defun colisper-check-project ()
+(defun colisper-project-check ()
   "Check the current project."
   (interactive)
   (compile (concatenate 'string
@@ -226,6 +226,26 @@
                          "-config" (colisper--get-catalog-path)
                          "-matcher .lisp"
                          "-f" ".lisp"))))
+
+(defun colisper-project-replace-all ()
+  "Run and apply all rules in the current project."
+  (interactive)
+  (save-buffer)
+  (let* ((point (point))
+         (filename (buffer-file-name))
+         ;XXX: copied command from above.
+         (cmd (concatenate 'string
+                        "cd "
+                        (projectile-project-root)
+                        " && "
+                        ;; comby finds the files with the required extension itself. Thanks!
+                        (colisper--create-comby-command
+                         "-config" (colisper--get-catalog-path)
+                         "-in-place"
+                         "-matcher .lisp"
+                         "-f" ".lisp"))))
+    ;; Status report could be improved.
+    (compile cmd)))
 
 ;;;###autoload
 (defhydra colisper-defun-hydra (:color blue :columns 3)
@@ -243,14 +263,23 @@
   Check or refactor this file.
   "
   ("c" colisper-check-file "Check file")
-  ("a" colisper--replace-all "replace All in file"))
+  ("r" colisper--replace-all "Replace All in file"))
 
 ;;;###autoload
 (defhydra colisper-project-hydra (:color red :column 3)
   "
   Check or refactor this project.
   "
-  ("c" colisper-check-project "Check project"))
+  ("c" colisper-project-check "check project")
+  ("r" colisper-project-replace-all "replace all in project"))
+
+(defhydra colisper-hydra (:color blue :column 3)
+  "
+  What element do we check?
+  "
+  ("d" colisper-defun-hydra/body "check defun")
+  ("f" colisper-file-hydra/body "check file")
+  ("p" colisper-project-hydra/body "check project"))
 
 (provide 'colisper)
 ;;; colisper.el ends here

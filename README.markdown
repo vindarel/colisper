@@ -31,6 +31,7 @@ And we can run them as a pre-commit hook or in a CI.
     - [Run on a project](#run-on-a-project)
 - [Emacs integration](#emacs-integration)
     - [Customization](#customization)
+- [CHANGELOG](#changelog)
 - [TODOs and ideas](#todos-and-ideas)
 - [See also:](#see-also)
 - [Final words](#final-words)
@@ -165,6 +166,7 @@ Some other available rules:
 - rewrite `(equal var nil)` to `(null var)`.
 - rewrite `(cl-fad:file-exists-p` or `(fad:file-exists-p` to using `uiop`.
 - rewrite `(funcall 'fn args)` to using a `#'` (respect lexical scope).
+- remove all `(log:debug …)`
 - check that `sort` is followed by `copy-seq` (WIP: we match the simplest expression of the form `(sort variable)`)
 
 You can see `test/playground.lisp` for an overview of all available checks.
@@ -221,9 +223,11 @@ Call `colisper-check-file`.
 
 Call a hydra, that gives you the choice of the rule:
 
+- `colisper-hydra/body`: asks wether to work on the current defun, the file, the project.
 - `colisper-[defun/file/project]-hydra/body`: act on the current defun/file/project, where the actions can be:
-  -`c`heck the file: run all rules and display the diff in a compilation buffer,
-  - `a`pply the rule(s): TODO
+  -`c`heck only: run all rules and display the diff in a compilation buffer,
+  - `r`un and apply the replace rule(s).
+    - this doesn't show much output, use your VCS (Magit) to see changes.
 
 Or call a rule directly. For example, place the cursor inside a
 function and call `M-x colisper--format-to-debug`. It replaces the
@@ -236,6 +240,10 @@ You can customize the path to the catalog directory and use your own set of rule
     (setq colisper-catalog-path "~/.config/colisper/catalog/")
 
 
+## CHANGELOG
+
+- <2025-01-18> added `colisper-project-replace-all` and `colisper-hydra/body` that dispatches on defun/file/project.
+- initial POC
 
 ## TODOs and ideas
 
